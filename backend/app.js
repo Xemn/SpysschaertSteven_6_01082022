@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 
 // Import de nos fichiers de routing :
 const userRoutes = require("./routes/user");
+const sauceRoutes = require("./routes/sauce");
 
 // Création de notre application express :
 const app = express();
