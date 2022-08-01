@@ -10,10 +10,10 @@ dotenv.config();
 
 // Lien fait entre notre base de donnée MongoDB et notre application :
 mongoose
-  .connect(
-    `mongodb+srv://${MONGO_ID}:${MONGO_PASSWORD}@clusteroc.zm5lpiz.mongodb.net/?retryWrites=true&w=majority`,
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(MONGO_CONNECT_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
