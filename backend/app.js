@@ -30,5 +30,8 @@ app.use((req, res, next) => {
   next();
 });
 
+// Utilisation de nos différentes routes :
+app.use("/api/auth", userRoutes);
+
 // On exporte notre application :
 module.exports = app;
