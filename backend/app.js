@@ -5,6 +5,9 @@ const path = require("path");
 // Import de notre module mongoose :
 const mongoose = require("mongoose");
 
+// Import de nos fichiers de routing :
+const userRoutes = require("./routes/user");
+
 // Création de notre application express :
 const app = express();
 
