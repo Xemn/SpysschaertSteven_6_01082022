@@ -91,3 +91,70 @@ exports.deleteSauce = (req, res, next) => {
     })
     .catch((error) => res.status(500).json({ error }));
 };
+// Logique métier permettant de Like / Dislike une sauce :
+exports.likeDislikeSauce = (req, res, next) => {
+  const like = req.body.like;
+  const sauceId = req.params.id;
+  const userId = req.auth.userId;
+
+  if (like == 1) {
+    Sauce.updateOne(
+      { _id: sauceId },
+      {
+        $inc: { likes: 1 },
+        $push: { usersLiked: userId },
+      }
+    )
+      .then(() =>
+        res.status(200).json({ message: "Vous avez aimé cette sauce" })
+      )
+      .catch((error) => res.status(400).json({ error }));
+  } else if (like == -1) {
+    Sauce.updateOne(
+      { _id: sauceId },
+      {
+        $inc: { dislikes: 1 },
+        $push: { usersDisliked: userId },
+      }
+    )
+      .then(() => {
+        res.status(200).json({ message: "Vous n'avez pas aimé cette sauce" });
+      })
+      .catch((error) => {
+        res.status(400).json({ error });
+      });
+  } else if (like == 0) {
+    Sauce.findOne({ _id: sauceId })
+      .then((sauce) => {
+        if (sauce.usersLiked.includes(userId)) {
+          Sauce.updateOne(
+            { _id: sauceId },
+            {
+              $inc: { likes: -1 },
+              $pull: { usersLiked: userId },
+            }
+          )
+            .then(() =>
+              res.status(200).json({ message: "Vous avez annulé votre like" })
+            )
+            .catch((error) => res.status(400).json({ error }));
+        } else if (sauce.usersDisliked.includes(userId)) {
+          Sauce.updateOne(
+            { _id: sauceId },
+            { $inc: { dislikes: -1 }, $pull: { usersDisliked: userId } }
+          )
+            .then(() =>
+              res
+                .status(200)
+                .json({ message: "Vous avez annulé votre dislike" })
+            )
+            .catch((error) => res.status(400).json({ error }));
+        }
+      })
+      .catch((error) => {
+        res.status(400).json({ error });
+      });
+  } else {
+    res.status(400).json({ message: "Like == Undefined" });
+  }
+};
