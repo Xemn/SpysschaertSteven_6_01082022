@@ -4,6 +4,18 @@ const express = require("express");
 const path = require("path");
 // Import de notre module mongoose :
 const mongoose = require("mongoose");
+// Import de notre module dotenv :
+const dotenv = require("dotenv");
+dotenv.config();
+
+// Lien fait entre notre base de donnée MongoDB et notre application :
+mongoose
+  .connect(
+    `mongodb+srv://${MONGO_ID}:${MONGO_PASSWORD}@clusteroc.zm5lpiz.mongodb.net/?retryWrites=true&w=majority`,
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 // Import de nos fichiers de routing :
 const userRoutes = require("./routes/user");
