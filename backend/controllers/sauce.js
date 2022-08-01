@@ -65,3 +65,29 @@ exports.updateOneSauce = (req, res, next) => {
     }
   });
 };
+// Logique métier afin de supprimer une sauce :
+exports.deleteSauce = (req, res, next) => {
+  // Nous récupérons la sauce :
+  Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => {
+      /* On vérifie si la personne demandant la supression est aussi la 
+        personne qui a créé cette sauce :  */
+      //Si c'est pas le cas :
+      if (sauce.userId != req.auth.userId) {
+        res
+          .status(401)
+          .json({ message: "Vous n'êtes pas autorisé à faire cette action !" });
+      } else {
+        // Si c'est le cas :
+        const filename = sauce.imageUrl.split("/images/")[1];
+        fs.unlink(`images/${filename}`, () => {
+          Sauce.deleteOne({ _id: req.params.id })
+            .then(() => res.status(200).json({ message: "Sauce supprimée ! " }))
+            .catch((error) => {
+              res.status().json({ error });
+            });
+        });
+      }
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
