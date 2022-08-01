@@ -31,6 +31,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// Indique à notre application Express de se servir du dossier static images :
+app.use("/images", express.static(path.join(__dirname, "images")));
+
 // Utilisation de nos différentes routes :
 app.use("/api/auth", userRoutes);
 app.use("/api/sauces", sauceRoutes);
