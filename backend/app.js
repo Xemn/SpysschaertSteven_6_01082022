@@ -33,6 +33,7 @@ app.use((req, res, next) => {
 
 // Utilisation de nos différentes routes :
 app.use("/api/auth", userRoutes);
+app.use("/api/sauces", sauceRoutes);
 
 // On exporte notre application :
 module.exports = app;
